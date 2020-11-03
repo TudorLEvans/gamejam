@@ -1,3 +1,10 @@
-from game import main
+from menu import main
+import pygame
 
-main.mainGame()
+size = width, height = 600, 600
+
+pygame.init()
+
+screen = pygame.display.set_mode(size)
+
+main.main_menu(screen, width, height)
