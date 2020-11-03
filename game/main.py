@@ -19,7 +19,7 @@ def mainGame(screen,width,height):
 
     gravity =  0.5
     frame_rate = 60
-    movement_speed = 5
+    movement_speed = 0.8
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
@@ -42,15 +42,20 @@ def mainGame(screen,width,height):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+                if event.key == K_UP:
+                    playerSprite.accelerate(1)
+                if event.key == K_DOWN:
+                    playerSprite.accelerate(-1)
             if event.type == KEYUP:
-                if event.key == K_LEFT:
-                    playerSprite.stop_walk(-1)
-                if event.key == K_RIGHT:
-                    playerSprite.stop_walk(1)
+                if event.key == K_UP:
+                    playerSprite.accelerate(0)
+                if event.key == K_DOWN:
+                    playerSprite.accelerate(0)
 
         screen.fill((0,0,0))
-        pressed_keys = pygame.key.get_pressed()
-        playerSprite.set_speeds(pressed_keys)
         playerSprite.update()
         for entity in all_sprites:
             screen.blit(entity.surf, entity.rect)
