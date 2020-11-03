@@ -14,12 +14,9 @@ from .sprites import platform, player
 
 
 
-def mainGame():
-    pygame.init()
-
+def mainGame(screen,width,height):
     running = True
 
-    size = width, height = 600, 600
     gravity =  0.5
     frame_rate = 60
     movement_speed = 5
@@ -28,7 +25,6 @@ def mainGame():
     all_sprites = pygame.sprite.Group()
     levels = pygame.sprite.Group()
 
-    screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
 
     playerSprite = player.Player(levels,width,height,gravity,movement_speed)
