@@ -19,7 +19,7 @@ def mainGame(screen,width,height):
 
     gravity =  0.5
     frame_rate = 60
-    movement_speed = 0.8
+    movement_speed = 0.5
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
@@ -30,7 +30,7 @@ def mainGame(screen,width,height):
     playerSprite = player.Player(levels,width,height,gravity,movement_speed)
     all_sprites.add(playerSprite)
 
-    platform_array = [[0,200],[200,200],[250,200]]
+    platform_array = [[250,550],[300,550]]
 
     for items in platform_array:
         platformSprite = platform.Platform(items[0],items[1])
@@ -51,9 +51,9 @@ def mainGame(screen,width,height):
                     playerSprite.accelerate(-1)
             if event.type == KEYUP:
                 if event.key == K_UP:
-                    playerSprite.accelerate(0)
+                    playerSprite.accelerate(-1)
                 if event.key == K_DOWN:
-                    playerSprite.accelerate(0)
+                    playerSprite.accelerate(1)
 
         screen.fill((0,0,0))
         playerSprite.update()
