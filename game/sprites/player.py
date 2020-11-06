@@ -12,7 +12,7 @@ from pygame.locals import (
 )
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self,levels,width,height,gravity,movement_speed):
+    def __init__(self,levels,width,height,gravity,movement_speed, non_player_sprites):
         super(Player, self).__init__()
         self.surf = pygame.Surface((25, 40))
         self.surf.fill((50, 50, 255))
@@ -27,14 +27,14 @@ class Player(pygame.sprite.Sprite):
         self.gravity = gravity
         self.movement_speed = movement_speed
         self.thrust = 0
+        self.non_player_sprites = non_player_sprites
 
     def update(self):
         self.calculate_gravity()
         self.v_y += self.thrust*self.movement_speed
-        if self.rect.bottom > self.height:
-            self.rect.bottom = self.height 
-            self.v_y = 0
-        self.rect.move_ip(self.v_x,self.v_y)
+        for sprite in self.non_player_sprites:
+            sprite.rect.move_ip(self.v_x, -self.v_y)
+
         self.level_collision_detector()
 
     
@@ -59,10 +59,15 @@ class Player(pygame.sprite.Sprite):
                 self.rect.left = collision_point.rect.right
                 self.v_x = 0
             if self.v_y < 0 and collision_point.rect.bottom <= self.rect.top - self.v_y:
-                self.rect.top = collision_point.rect.bottom
+                # might be wrong
+                self.v_y = self.rect.top - collision_point.rect.bottom
+                for sprite in self.non_player_sprites:
+                    sprite.rect.move_ip(self.v_x, -self.v_y)
                 self.v_y = 0
+            
             if self.v_y > 0 and collision_point.rect.top >= self.rect.bottom - self.v_y:
-                self.rect.bottom = collision_point.rect.top
+                self.v_y = self.rect.bottom - collision_point.rect.top
+                for sprite in self.non_player_sprites:
+                    sprite.rect.move_ip(self.v_x, -self.v_y)
                 self.v_y = 0
-                self.v_x = 0
-                
+            
