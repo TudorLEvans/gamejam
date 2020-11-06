@@ -23,11 +23,13 @@ def mainGame(screen,width,height):
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
+    non_player_sprites = pygame.sprite.Group()
+
     levels = pygame.sprite.Group()
 
     clock = pygame.time.Clock()
 
-    playerSprite = player.Player(levels,width,height,gravity,movement_speed)
+    playerSprite = player.Player(levels,width,height,gravity, non_player_sprites)
     all_sprites.add(playerSprite)
 
     platform_array = [[250,550],[300,550]]
@@ -36,6 +38,7 @@ def mainGame(screen,width,height):
         platformSprite = platform.Platform(items[0],items[1])
         levels.add(platformSprite)
         all_sprites.add(platformSprite)
+        non_player_sprites.add(platformSprite)
 
     while running:
 
