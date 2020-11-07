@@ -19,8 +19,12 @@ class Player(pygame.sprite.Sprite):
 
         self.width = 25
         self.height = 40
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((50, 50, 255))
+
+        # For rotation
+        self.original_surf = pygame.Surface((self.width, self.height))
+        self.original_surf.fill((50, 255, 50))
+
+        self.surf = self.original_surf
         self.rect = self.surf.get_rect()
         self.rect.center = (screen_width//2, screen_height//2)
 
@@ -61,7 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.cos_angle = np.cos(self.angle * np.pi/180)
         self.sin_angle = np.sin(self.angle * np.pi/180)
         old_center = self.rect.center
-        self.surf = pygame.transform.rotozoom(self.surf, -self.angle, 1)
+        self.surf = pygame.transform.rotozoom(self.original_surf, -self.angle, 1)
         self.rect = self.surf.get_rect(center = old_center)
 
     def level_collision_detector(self, levels, non_player_sprites):
