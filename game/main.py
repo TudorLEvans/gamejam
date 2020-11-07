@@ -17,15 +17,9 @@ from .sprites import platform, player, background
 
 
 def mainGame(screen, screen_width, screen_height):
-    running = True
 
     gravity_constant =  100
     frame_rate = 60
-
-    def exit_game(running):
-        running = False
-    pause_menu = create_pause_menu(screen, screen_width, screen_height, exit_game)
-    pause_menu.disable()
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
@@ -51,33 +45,41 @@ def mainGame(screen, screen_width, screen_height):
     all_sprites.add(earth)
     non_player_sprites.add(earth)
 
+    def main_game_loop():
+        running = True
 
-    while running:
-        for event in pygame.event.get():
+        while running:
+            for event in pygame.event.get():
 
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    pause_menu.enable()
-                    pause_menu.mainloop(screen)
-        
-        keys = pygame.key.get_pressed()
-        if keys[K_RIGHT]:
-            playerSprite.rotate(1)
-        if keys[K_LEFT]:
-            playerSprite.rotate(-1)
-        if keys[K_UP]:
-            playerSprite.accelerate(1)
-        if keys[K_DOWN]:
-            playerSprite.accelerate(-1)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        running = False
+            
+            keys = pygame.key.get_pressed()
+            if keys[K_RIGHT]:
+                playerSprite.rotate(1)
+            if keys[K_LEFT]:
+                playerSprite.rotate(-1)
+            if keys[K_UP]:
+                playerSprite.accelerate(1)
+            if keys[K_DOWN]:
+                playerSprite.accelerate(-1)
 
-        screen.fill((0,0,0))
-        playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
-        for entity in all_sprites:
-            screen.blit(entity.surf, entity.rect)
+            screen.fill((0,0,0))
+            playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
+            for entity in all_sprites:
+                screen.blit(entity.surf, entity.rect)
 
-        pygame.display.flip()
-        clock.tick(frame_rate)
+            pygame.display.flip()
+            clock.tick(frame_rate)
+
+    pause_menu = create_pause_menu(screen, screen_width, screen_height, main_game_loop)
+    pause_menu.disable()
+
+    main_game_loop()
+    pause_menu.enable()
+    pause_menu.mainloop(screen)
 
     return
