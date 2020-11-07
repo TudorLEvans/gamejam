@@ -43,8 +43,14 @@ class Player(pygame.sprite.Sprite):
         self.calculate_gravity(gravity_constant, levels)
         self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
+        
+        # Move player horizontally
+        self.rect.move_ip(-self.v_x,0)
+
+        # Move other sprites veritcally
         for sprite in non_player_sprites:
-            sprite.rect.move_ip(self.v_x, -self.v_y)
+            sprite.rect.move_ip(0, -self.v_y)
+        
         self.level_collision_detector(levels, non_player_sprites)
 
     def calculate_gravity(self, gravity_constant, levels):
@@ -87,4 +93,3 @@ class Player(pygame.sprite.Sprite):
                 for sprite in non_player_sprites:
                     sprite.rect.move_ip(self.v_x, -self.v_y)
                 self.v_y = 0
-            
