@@ -37,7 +37,7 @@ def mainGame(screen,width,height):
     playerSprite = player.Player(levels,width,height,gravity, non_player_sprites)
     all_sprites.add(playerSprite)
 
-    platform_array = [[250,550],[300,550]]
+    platform_array = [[250,1950],[300,1950]]
 
     for items in platform_array:
         platformSprite = platform.Platform(items[0],items[1])
