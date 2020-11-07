@@ -14,7 +14,7 @@ from .sprites import platform, player
 
 
 
-def mainGame(screen,width,height):
+def mainGame(screen, screen_width, screen_height):
     running = True
 
     gravity =  500
@@ -28,7 +28,7 @@ def mainGame(screen,width,height):
 
     clock = pygame.time.Clock()
 
-    playerSprite = player.Player(width, height)
+    playerSprite = player.Player(screen_width, screen_height)
 
     all_sprites.add(playerSprite)
 

@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.height = 40
         self.v_y = 0
         self.v_x = 0
-        self.thrust_magnitude = 0.4
+        self.thrust_magnitude = 0.1
         self.thrust_direction = 0
 
         self.surf = pygame.Surface((self.width, self.height))
@@ -47,7 +47,7 @@ class Player(pygame.sprite.Sprite):
             self.thrust_direction -= direction
     
     def level_collision_detector(self, levels, non_player_sprites):
-        collision_point = pygame.sprite.spritecollideany(self ,levels)
+        collision_point = pygame.sprite.spritecollideany(self, levels)
         if collision_point != None:
             if self.v_x > 0 and collision_point.rect.left >= self.rect.right - self.v_x:
                 self.rect.right = collision_point.rect.left
