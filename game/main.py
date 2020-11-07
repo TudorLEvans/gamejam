@@ -29,7 +29,7 @@ def mainGame(screen,width,height):
 
     clock = pygame.time.Clock()
 
-    backgroundSprite = background.Background(0,0)
+    backgroundSprite = background.Background(0,-10000+600)
     all_sprites.add(backgroundSprite)
     non_player_sprites.add(backgroundSprite)
 
@@ -37,7 +37,7 @@ def mainGame(screen,width,height):
     playerSprite = player.Player(levels,width,height,gravity, non_player_sprites)
     all_sprites.add(playerSprite)
 
-    platform_array = [[250,1950],[300,1950]]
+    platform_array = [[250,320],[300,320]]
 
     for items in platform_array:
         platformSprite = platform.Platform(items[0],items[1])
