@@ -10,7 +10,7 @@ from pygame.locals import (
     KEYUP,
     QUIT,
 )
-from .sprites import platform, player
+from .sprites import platform, player, background
 
 
 
@@ -28,6 +28,11 @@ def mainGame(screen,width,height):
     levels = pygame.sprite.Group()
 
     clock = pygame.time.Clock()
+
+    backgroundSprite = background.Background(0,0)
+    all_sprites.add(backgroundSprite)
+    non_player_sprites.add(backgroundSprite)
+
 
     playerSprite = player.Player(levels,width,height,gravity, non_player_sprites)
     all_sprites.add(playerSprite)
