@@ -1,4 +1,6 @@
 import pygame,sys
+import numpy as np
+
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -15,20 +17,26 @@ class Player(pygame.sprite.Sprite):
     def __init__(self,levels,screen_width,screen_height,gravity,non_player_sprites):
         super(Player, self).__init__()
 
-        self.width = 25
-        self.height = 40
-        self.surf = pygame.Surface((self.width, self.height))
-
-        self.surf.fill((50, 50, 255))
-        self.rect = self.surf.get_rect()
-
         self.screen_width = screen_width
         self.screen_height = screen_height
 
-        self.rect.center = (self.screen_width//2, self.screen_height//2)
+        self.width = 25
+        self.height = 40
+
+        self.original_surf = pygame.Surface((self.width, self.height))
+        self.original_surf.fill((50, 50, 255))
+
+        self.surf = self.original_surf
+        self.rect = self.surf.get_rect(center = (self.screen_width//2, self.screen_height//2))
         
         self.v_y = 0
         self.v_x = 0
+
+        self.rotational_speed = 1
+
+        self.angle = 0
+        self.cos_angle = 1
+        self.sin_angle = 0
 
         self.levels = levels
         self.gravity = gravity
@@ -38,9 +46,15 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.calculate_gravity()
-        self.v_y += self.thrust_direction*self.thrust_magnitude
+
+        self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
+        self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
+
+
         for sprite in self.non_player_sprites:
+        
             sprite.rect.move_ip(self.v_x, -self.v_y)
+            
 
         self.level_collision_detector()
 
@@ -55,7 +69,19 @@ class Player(pygame.sprite.Sprite):
     def accelerate(self,direction):
         if (self.thrust_direction >-1 and direction == 1) or (self.thrust_direction <1 and direction == -1):
             self.thrust_direction -= direction
-    
+
+    def rotate(self,rotational_direction):
+        dtheta = rotational_direction*self.rotational_speed
+        self.angle += dtheta
+        self.cos_angle = np.cos(self.angle * np.pi/180)
+        self.sin_angle = np.sin(self.angle * np.pi/180)
+
+        old_center = self.rect.center
+
+        # rotozoom uses a filter giving better quality rotations than rotate
+        self.surf = pygame.transform.rotozoom(self.original_surf, -self.angle, 1)
+        self.rect = self.surf.get_rect(center = old_center)
+
     def level_collision_detector(self):
         collision_point = pygame.sprite.spritecollideany(self,self.levels)
         if collision_point != None:
