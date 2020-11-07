@@ -13,7 +13,7 @@ mytheme = themes.Theme(
     menubar_close_button = False
 )
 
-def create_pause_menu(screen, screen_width, screen_height, exit_game):
+def create_pause_menu(screen, screen_width, screen_height, main_game_loop):
 
     pause_menu = pygame_menu.Menu(
         screen_width, 
@@ -22,7 +22,7 @@ def create_pause_menu(screen, screen_width, screen_height, exit_game):
         theme=mytheme
     )
 
-    pause_menu.add_button('Return to Game', pause_menu.disable)
-    pause_menu.add_button('Main Menu', pause_menu.full_reset)
+    pause_menu.add_button('Return to Game', main_game_loop)
+    pause_menu.add_button('Main Menu', pause_menu.disable)
     pause_menu.add_button('Quit', pygame_menu.events.EXIT)
     return pause_menu

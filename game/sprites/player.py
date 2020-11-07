@@ -39,19 +39,20 @@ class Player(pygame.sprite.Sprite):
         self.sin_angle = 0
 
 
-    def update(self, gravity_constant, levels, non_player_sprites):
+    def update(self, screen_width, gravity_constant, levels, non_player_sprites):
         self.calculate_gravity(gravity_constant, levels)
+        
         self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
         
-        # Move player horizontally
         self.rect.move_ip(-self.v_x,0)
-
-        # Move other sprites veritcally
         for sprite in non_player_sprites:
             sprite.rect.move_ip(0, -self.v_y)
-        
-        self.level_collision_detector(levels, non_player_sprites)
+    
+        self.keep_in_screen(screen_width)
+        self.planet_collision_detection(levels, non_player_sprites)
+        # self.level_collision_detector(levels, non_player_sprites)
+
 
     def calculate_gravity(self, gravity_constant, levels):
         self.rect.y += 2
@@ -76,7 +77,7 @@ class Player(pygame.sprite.Sprite):
     
     def level_collision_detector(self, levels, non_player_sprites):
         collision_point = pygame.sprite.spritecollideany(self, levels)
-        if collision_point != None:
+        if collision_point != None and collision_point.is_moon == False:
             if self.v_x > 0 and collision_point.rect.left >= self.rect.right - self.v_x:
                 self.rect.right = collision_point.rect.left
                 self.v_x = 0
@@ -93,3 +94,24 @@ class Player(pygame.sprite.Sprite):
                 for sprite in non_player_sprites:
                     sprite.rect.move_ip(self.v_x, -self.v_y)
                 self.v_y = 0
+        
+    def planet_collision_detection(self, levels, non_player_sprites):
+        for planet in levels:
+            if self.rect.bottom - 1 <= planet.rect.top and self.rect.bottom + self.v_y >= planet.rect.top and self.v_y != 0:
+                self.v_y = planet.rect.top - self.rect.bottom
+                for sprite in non_player_sprites:
+                    sprite.rect.move_ip(self.v_x, -self.v_y)
+                self.v_y = 0
+            if self.rect.top + 1 >= planet.rect.bottom and self.rect.top + self.v_y <= planet.rect.bottom  and self.v_y != 0:
+                self.v_y = planet.rect.bottom - self.rect.top
+                for sprite in non_player_sprites:
+                    sprite.rect.move_ip(self.v_x, -self.v_y)
+                self.v_y = 0
+
+    def keep_in_screen(self, screen_width):
+        if self.rect.left <= 0 and self.v_x >=0:
+            self.rect.left = 0
+            self.v_x = 0
+        if self.rect.right >= screen_width and self.v_x <= 0:
+            self.rect.right = screen_width
+            self.v_x = 0
