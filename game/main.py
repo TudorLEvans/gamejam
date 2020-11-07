@@ -17,14 +17,13 @@ from .sprites import platform, player
 def mainGame(screen, screen_width, screen_height):
     running = True
 
-    gravity =  500
+    gravity_constant =  100
     frame_rate = 60
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     non_player_sprites = pygame.sprite.Group()
-
-    levels = pygame.sprite.Group()
+    gravity_bodies = pygame.sprite.Group()
 
     clock = pygame.time.Clock()
 
@@ -32,13 +31,16 @@ def mainGame(screen, screen_width, screen_height):
 
     all_sprites.add(playerSprite)
 
-    platform_array = [[250,550],[300,550]]
+    moon = platform.Platform(0,-100000, -200, 1, True)
+    gravity_bodies.add(moon)
+    all_sprites.add(moon)
+    non_player_sprites.add(moon)
 
-    for items in platform_array:
-        platformSprite = platform.Platform(items[0],items[1])
-        levels.add(platformSprite)
-        all_sprites.add(platformSprite)
-        non_player_sprites.add(platformSprite)
+    earth = platform.Platform(0,320, 300, 1.3, False)
+    gravity_bodies.add(earth)
+    all_sprites.add(earth)
+    non_player_sprites.add(earth)
+
 
     while running:
 
@@ -59,7 +61,7 @@ def mainGame(screen, screen_width, screen_height):
                     playerSprite.accelerate(1)
 
         screen.fill((0,0,0))
-        playerSprite.update(gravity, levels, non_player_sprites)
+        playerSprite.update(gravity_constant, gravity_bodies, non_player_sprites)
         for entity in all_sprites:
             screen.blit(entity.surf, entity.rect)
 

@@ -8,3 +8,4 @@ pygame.init()
 screen = pygame.display.set_mode(size)
 
 main.main_menu(screen, screen_width, screen_height)
+
