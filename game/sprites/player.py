@@ -41,13 +41,18 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, screen_width, gravity_constant, levels, non_player_sprites):
         self.calculate_gravity(gravity_constant, levels)
+        
         self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
+        
+        self.rect.move_ip(-self.v_x,0)
         for sprite in non_player_sprites:
-            sprite.rect.move_ip(self.v_x, -self.v_y)
+            sprite.rect.move_ip(0, -self.v_y)
+    
         self.keep_in_screen(screen_width)
         self.planet_collision_detection(levels, non_player_sprites)
         # self.level_collision_detector(levels, non_player_sprites)
+
 
     def calculate_gravity(self, gravity_constant, levels):
         self.rect.y += 2
@@ -69,7 +74,7 @@ class Player(pygame.sprite.Sprite):
         old_center = self.rect.center
         self.surf = pygame.transform.rotozoom(self.original_surf, -self.angle, 1)
         self.rect = self.surf.get_rect(center = old_center)
-
+    
     def level_collision_detector(self, levels, non_player_sprites):
         collision_point = pygame.sprite.spritecollideany(self, levels)
         if collision_point != None and collision_point.is_moon == False:
@@ -110,4 +115,3 @@ class Player(pygame.sprite.Sprite):
         if self.rect.right >= screen_width and self.v_x <= 0:
             self.rect.right = screen_width
             self.v_x = 0
-            

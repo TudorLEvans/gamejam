@@ -28,7 +28,8 @@ def mainGame(screen, screen_width, screen_height):
 
     clock = pygame.time.Clock()
 
-    backgroundSprite = background.Background(0,-10000+600)
+
+    backgroundSprite = background.Background(0,600-60000)
     all_sprites.add(backgroundSprite)
     non_player_sprites.add(backgroundSprite)
 
