@@ -5,6 +5,7 @@ from game import main
 def main_menu(screen,width,height):
     def start_game():
         main.mainGame(screen,width,height)
+        
     menu = pygame_menu.Menu(300, 400, 'Welcome',
                         theme=pygame_menu.themes.THEME_BLUE)
 
