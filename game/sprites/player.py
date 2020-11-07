@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
         old_center = self.rect.center
         self.surf = pygame.transform.rotozoom(self.original_surf, -self.angle, 1)
         self.rect = self.surf.get_rect(center = old_center)
-
+    
     def level_collision_detector(self, levels, non_player_sprites):
         collision_point = pygame.sprite.spritecollideany(self, levels)
         if collision_point != None:
