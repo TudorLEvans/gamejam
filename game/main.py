@@ -11,6 +11,8 @@ from pygame.locals import (
     QUIT,
 )
 from .sprites import platform, player, background
+from menu.pause import create_pause_menu
+from .sprites import platform, player, background
 
 
 
@@ -20,6 +22,11 @@ def mainGame(screen, screen_width, screen_height):
     gravity =  500
     frame_rate = 60
 
+    def exit_game(running):
+        running = False
+    pause_menu = create_pause_menu(screen, screen_width, screen_height, exit_game)
+    pause_menu.disable()
+
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     non_player_sprites = pygame.sprite.Group()
@@ -27,6 +34,7 @@ def mainGame(screen, screen_width, screen_height):
     levels = pygame.sprite.Group()
 
     clock = pygame.time.Clock()
+
 
     backgroundSprite = background.Background(0,-10000+600)
     all_sprites.add(backgroundSprite)
@@ -48,11 +56,11 @@ def mainGame(screen, screen_width, screen_height):
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
-                running = False
-
+                pygame.quit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    running = False
+                    pause_menu.enable()
+                    pause_menu.mainloop(screen)
                 if event.key == K_UP:
                     playerSprite.accelerate(1)
                 if event.key == K_DOWN:
@@ -79,4 +87,4 @@ def mainGame(screen, screen_width, screen_height):
         pygame.display.flip()
         clock.tick(frame_rate)
 
-    pygame.quit()
+    return

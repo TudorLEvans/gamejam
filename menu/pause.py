@@ -13,18 +13,16 @@ mytheme = themes.Theme(
     menubar_close_button = False
 )
 
-def main_menu(screen, screen_width, screen_height):
+def create_pause_menu(screen, screen_width, screen_height, exit_game):
 
-    def start_game():
-        main.mainGame(screen, screen_width, screen_height)
-
-    menu = pygame_menu.Menu(
+    pause_menu = pygame_menu.Menu(
         screen_width, 
         screen_height, 
         'Fly me to the moon',
         theme=mytheme
     )
-    
-    menu.add_button('Play', start_game)
-    menu.add_button('Quit', pygame_menu.events.EXIT)
-    menu.mainloop(screen)
+
+    pause_menu.add_button('Return to Game', pause_menu.disable)
+    pause_menu.add_button('Main Menu', pause_menu.full_reset)
+    pause_menu.add_button('Quit', pygame_menu.events.EXIT)
+    return pause_menu
