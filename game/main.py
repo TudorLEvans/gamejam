@@ -14,12 +14,11 @@ from .sprites import platform, player
 
 
 
-def mainGame(screen,width,height):
+def mainGame(screen, screen_width, screen_height):
     running = True
 
-    gravity =  0.5
+    gravity =  500
     frame_rate = 60
-    movement_speed = 0.5
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
@@ -29,7 +28,7 @@ def mainGame(screen,width,height):
 
     clock = pygame.time.Clock()
 
-    playerSprite = player.Player(levels,width,height,gravity,movement_speed, non_player_sprites)
+    playerSprite = player.Player(screen_width, screen_height)
 
     all_sprites.add(playerSprite)
 
@@ -60,11 +59,11 @@ def mainGame(screen,width,height):
                     playerSprite.accelerate(1)
 
         screen.fill((0,0,0))
-        playerSprite.update()
+        playerSprite.update(gravity, levels, non_player_sprites)
         for entity in all_sprites:
             screen.blit(entity.surf, entity.rect)
 
         pygame.display.flip()
-        clock.tick(20)
+        clock.tick(frame_rate)
 
     pygame.quit()
