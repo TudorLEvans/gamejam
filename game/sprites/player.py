@@ -72,7 +72,7 @@ class Player(pygame.sprite.Sprite):
                     sprite.rect.move_ip(self.v_x, -self.v_y)
                 self.v_y = 0
             
-            if self.v_y > 0 and collision_point.rect.top >= self.rect.bottom - self.v_y:
+            if self.v_y > 0 and collision_point.rect.top >= self.rect.bottom - self.v_y
                 self.v_y = collision_point.rect.top - self.rect.bottom
                 for sprite in self.non_player_sprites:
                     sprite.rect.move_ip(self.v_x, -self.v_y)
