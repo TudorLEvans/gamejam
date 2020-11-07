@@ -10,7 +10,7 @@ from pygame.locals import (
     KEYUP,
     QUIT,
 )
-from .sprites import platform, player, background, score_tracker, speedometer, timer
+from .sprites import platform, player, background, score_tracker, speedometer, timer, enemy
 from menu.pause import create_pause_menu
 
 def mainGame(screen, screen_width, screen_height, moon_image, earth_image, player_image):
@@ -19,7 +19,12 @@ def mainGame(screen, screen_width, screen_height, moon_image, earth_image, playe
     frame_rate = 60
     journey_length = 100000
 
-    enemies = pygame.sprite.Group()
+    def exit_game(running):
+        running = False
+    pause_menu = create_pause_menu(screen, screen_width, screen_height, exit_game)
+    pause_menu.disable()
+
+    enemy_sprites = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     non_player_sprites = pygame.sprite.Group()
     gravity_bodies = pygame.sprite.Group()
@@ -30,8 +35,12 @@ def mainGame(screen, screen_width, screen_height, moon_image, earth_image, playe
     all_sprites.add(backgroundSprite)
     non_player_sprites.add(backgroundSprite)
 
-    playerSprite = player.Player(screen_width, screen_height, player_image)
-    all_sprites.add(playerSprite)
+    playerSprite = player.Player(screen_width, screen_height)
+    enemySprite = enemy.Enemy(screen_width, screen_height)
+
+    all_sprites.add((playerSprite, enemySprite))
+    non_player_sprites.add(enemySprite)
+    enemy_sprites.add(enemySprite)
 
     moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True, moon_image)
     gravity_bodies.add(moon)
@@ -98,6 +107,7 @@ def mainGame(screen, screen_width, screen_height, moon_image, earth_image, playe
             speedometerSprite.update_speed(screen_height, playerSprite.v_y, playerSprite.a_y)
             timerSprite.update_time(screen_width, screen_height, time)
 
+            enemySprite.update()
             for entity in all_sprites:
                 screen.blit(entity.surf, entity.rect)
 
