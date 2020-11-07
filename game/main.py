@@ -39,8 +39,7 @@ def mainGame(screen, screen_width, screen_height):
     all_sprites.add(backgroundSprite)
     non_player_sprites.add(backgroundSprite)
 
-
-    playerSprite = player.Player(levels,width,height,gravity, non_player_sprites)
+    playerSprite = player.Player(screen_width, screen_height)
     all_sprites.add(playerSprite)
 
     moon = platform.Platform(0,-100000, -200, 1, True)

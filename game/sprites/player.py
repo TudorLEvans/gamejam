@@ -35,11 +35,11 @@ class Player(pygame.sprite.Sprite):
         self.sin_angle = 0
 
 
-    def update(self):
+    def update(self, gravity_constant, levels, non_player_sprites):
         self.calculate_gravity(gravity_constant, levels)
         self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
-        for sprite in self.non_player_sprites:
+        for sprite in non_player_sprites:
             sprite.rect.move_ip(self.v_x, -self.v_y)
         self.level_collision_detector(levels, non_player_sprites)
 
