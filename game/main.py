@@ -41,10 +41,11 @@ def mainGame(screen,width,height):
         non_player_sprites.add(platformSprite)
 
     while running:
-
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 running = False
+
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     running = False
@@ -52,11 +53,19 @@ def mainGame(screen,width,height):
                     playerSprite.accelerate(1)
                 if event.key == K_DOWN:
                     playerSprite.accelerate(-1)
+
+
             if event.type == KEYUP:
                 if event.key == K_UP:
                     playerSprite.accelerate(-1)
                 if event.key == K_DOWN:
                     playerSprite.accelerate(1)
+        
+        keys = pygame.key.get_pressed()  #checking pressed keys
+        if keys[K_RIGHT]:
+            playerSprite.rotate(1)
+        if keys[K_LEFT]:
+            playerSprite.rotate(-1)
 
         screen.fill((0,0,0))
         playerSprite.update()
