@@ -44,7 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.sin_angle = 0
 
 
-    def update(self, screen_width, gravity_constant, levels, non_player_sprites):
+    def update(self, screen_width, gravity_constant, levels, enemy_sprites, non_player_sprites):
+        print(self.thrust_direction)
 
         self.a_x = self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.a_y = self.thrust_direction * self.thrust_magnitude * self.cos_angle
@@ -63,6 +64,7 @@ class Player(pygame.sprite.Sprite):
         win = self.planet_collision_detection(levels, non_player_sprites)
         return win
         # self.level_collision_detector(levels, non_player_sprites)
+        self.enemy_collision_detector(enemy_sprites, non_player_sprites)
 
     def calculate_gravity(self, gravity_constant, levels):
         self.rect.y += 2
@@ -146,3 +148,23 @@ class Player(pygame.sprite.Sprite):
         if self.rect.right >= screen_width and self.v_x <= 0:
             self.rect.right = screen_width
             self.v_x = 0
+
+    def enemy_collision_detector(self, enemy_sprites, non_player_sprites):
+        collision_point = pygame.sprite.spritecollideany(self, enemy_sprites)
+        if collision_point is not None:
+            if collision_point.rect.left >= self.rect.right - self.v_x:
+                self.rect.right = collision_point.rect.left
+                self.v_x = 0
+            if collision_point.rect.right <= self.rect.left - self.v_x:              
+                self.rect.left = collision_point.rect.right
+                self.v_x = 0
+            if collision_point.rect.bottom <= self.rect.top - self.v_y:
+                self.v_y = collision_point.rect.bottom - self.rect.top
+                for sprite in non_player_sprites:
+                    sprite.rect.move_ip(self.v_x, -self.v_y)
+                self.v_y = 0
+            if collision_point.rect.top >= self.rect.bottom - self.v_y:
+                self.v_y = collision_point.rect.top - self.rect.bottom
+                for sprite in non_player_sprites:
+                    sprite.rect.move_ip(self.v_x, -self.v_y)
+                self.v_y = 0
