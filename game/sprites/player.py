@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, screen_width, gravity_constant, levels, non_player_sprites):
         self.calculate_gravity(gravity_constant, levels)
-        
+        print(self.thrust_direction)
         self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
         
