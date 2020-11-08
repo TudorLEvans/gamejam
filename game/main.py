@@ -10,9 +10,8 @@ from pygame.locals import (
     KEYUP,
     QUIT,
 )
-from .sprites import platform, player, background
+from .sprites import platform, player, background, score_tracker, speedometer, timer
 from menu.pause import create_pause_menu
-from .sprites import platform, player, background
 
 
 
@@ -20,6 +19,7 @@ def mainGame(screen, screen_width, screen_height):
 
     gravity_constant =  100
     frame_rate = 60
+    journey_length = 100000
 
     enemies = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
@@ -28,7 +28,6 @@ def mainGame(screen, screen_width, screen_height):
 
     clock = pygame.time.Clock()
 
-
     backgroundSprite = background.Background(0,600-60000)
     all_sprites.add(backgroundSprite)
     non_player_sprites.add(backgroundSprite)
@@ -36,7 +35,7 @@ def mainGame(screen, screen_width, screen_height):
     playerSprite = player.Player(screen_width, screen_height)
     all_sprites.add(playerSprite)
 
-    moon = platform.Platform(0,-100000, -200, 1, True)
+    moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True)
     gravity_bodies.add(moon)
     all_sprites.add(moon)
     non_player_sprites.add(moon)
@@ -46,10 +45,21 @@ def mainGame(screen, screen_width, screen_height):
     all_sprites.add(earth)
     non_player_sprites.add(earth)
 
+    speedometerSprite = speedometer.Speedometer(screen_height)
+    all_sprites.add(speedometerSprite)
+
+    timerSprite = timer.Timer(screen_width, screen_height)
+    all_sprites.add(timerSprite)
+
+    scoreSprite = score_tracker.Score(journey_length)
+    all_sprites.add(scoreSprite)
+
     def main_game_loop():
         running = True
 
+        time = 0
         while running:
+            time += clock.get_time()
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
@@ -74,7 +84,13 @@ def mainGame(screen, screen_width, screen_height):
                 playerSprite.rotate(-1)
 
             screen.fill((0,0,0))
+
             playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
+
+            scoreSprite.update_score(screen_width, journey_length, journey_length + moon.rect.centery)
+            speedometerSprite.update_speed(screen_height, playerSprite.v_y)
+            timerSprite.update_time(screen_width, screen_height, time)
+
             for entity in all_sprites:
                 screen.blit(entity.surf, entity.rect)
 
