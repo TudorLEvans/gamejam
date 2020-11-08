@@ -36,7 +36,7 @@ def mainGame(screen, screen_width, screen_height):
     playerSprite = player.Player(screen_width, screen_height)
     all_sprites.add(playerSprite)
 
-    moon = platform.Platform(0,-1000, -200, 1, True)
+    moon = platform.Platform(0,-100000, -200, 1, True)
     gravity_bodies.add(moon)
     all_sprites.add(moon)
     non_player_sprites.add(moon)
@@ -57,16 +57,21 @@ def mainGame(screen, screen_width, screen_height):
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         running = False
+                    if event.key == K_UP:
+                        playerSprite.accelerate(1)
+                    if event.key == K_DOWN:
+                        playerSprite.accelerate(-1)
+                if event.type == KEYUP:
+                    if event.key == K_UP:
+                        playerSprite.accelerate(-1)
+                    if event.key == K_DOWN:
+                        playerSprite.accelerate(1)
             
             keys = pygame.key.get_pressed()
             if keys[K_RIGHT]:
                 playerSprite.rotate(1)
             if keys[K_LEFT]:
                 playerSprite.rotate(-1)
-            if keys[K_UP]:
-                playerSprite.accelerate(1)
-            if keys[K_DOWN]:
-                playerSprite.accelerate(-1)
 
             screen.fill((0,0,0))
             playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
