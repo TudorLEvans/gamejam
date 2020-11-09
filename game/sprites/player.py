@@ -40,7 +40,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, screen_width, gravity_constant, levels, non_player_sprites):
         self.calculate_gravity(gravity_constant, levels)
-        print(self.thrust_direction)
         self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
         
@@ -49,7 +48,8 @@ class Player(pygame.sprite.Sprite):
             sprite.rect.move_ip(0, -self.v_y)
     
         self.keep_in_screen(screen_width)
-        self.planet_collision_detection(levels, non_player_sprites)
+        win = self.planet_collision_detection(levels, non_player_sprites)
+        return win
         # self.level_collision_detector(levels, non_player_sprites)
 
     def calculate_gravity(self, gravity_constant, levels):
@@ -95,25 +95,27 @@ class Player(pygame.sprite.Sprite):
                 self.v_y = 0
         
     def planet_collision_detection(self, levels, non_player_sprites):
+        original_speed = self.v_y
         for planet in levels:
             if self.rect.bottom - 2 <= planet.rect.top and self.rect.bottom + self.v_y >= planet.rect.top and self.v_y != 0:
                 self.v_y = planet.rect.top - self.rect.bottom
                 for sprite in non_player_sprites:
                     sprite.rect.move_ip(0, -self.v_y)
+                if abs(self.angle%360) > 10 or abs(original_speed) > 30:
+                    return False
                 self.v_y = 0
                 self.v_x = 0
-                if abs(self.angle%360) > 5:
-                    print('You lose')
             if self.rect.top + 2 >= planet.rect.bottom and self.rect.top + self.v_y <= planet.rect.bottom  and self.v_y != 0:
                 self.v_y = planet.rect.bottom - self.rect.top
                 for sprite in non_player_sprites:
                     sprite.rect.move_ip(0, -self.v_y)
                 self.v_y = 0
                 self.v_x = 0
-                if abs(self.angle%360) > 185 or abs(self.angle%360) < 175:
-                    print('You lose')
+                if (abs(self.angle%360) > 190 or abs(self.angle%360) < 170) or abs(original_speed) > 30:
+                    return False
                 elif planet.is_moon:
-                    print('You win')
+                    return True
+        return None
 
     def keep_in_screen(self, screen_width):
         if self.rect.left <= 0 and self.v_x >=0:
