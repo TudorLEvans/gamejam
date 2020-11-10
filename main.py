@@ -7,4 +7,7 @@ pygame.init()
 
 screen = pygame.display.set_mode(size)
 
-main.main_menu(screen, screen_width, screen_height)
+moon_image, earth_image = pygame.image.load("images/moon.png"), pygame.image.load("images/earth.png")
+
+
+main.main_menu(screen, screen_width, screen_height, moon_image, earth_image)
