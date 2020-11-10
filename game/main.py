@@ -33,12 +33,12 @@ def mainGame(screen, screen_width, screen_height):
     playerSprite = player.Player(screen_width, screen_height)
     all_sprites.add(playerSprite)
 
-    moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True)
+    moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True, "moon")
     gravity_bodies.add(moon)
     all_sprites.add(moon)
     non_player_sprites.add(moon)
 
-    earth = platform.Platform(0,320, 300, 1.3, False)
+    earth = platform.Platform(0,320, 300, 1.3, False, "earth")
     gravity_bodies.add(earth)
     all_sprites.add(earth)
     non_player_sprites.add(earth)
