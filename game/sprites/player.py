@@ -24,11 +24,16 @@ class Player(pygame.sprite.Sprite):
         self.original_surf.fill((50, 255, 50))
 
         self.surf = self.original_surf
-        self.rect = self.surf.get_rect()
-        self.rect.center = (screen_width//2, screen_height//2)
+        self.rect = self.surf.get_rect(center = (screen_width//2, screen_height//2))
 
-        self.v_y = 0
+        self.start_height = self.rect.centery
+
         self.v_x = 0
+        self.v_y = 0
+        
+        self.a_x = 0
+        self.a_y = 0
+        
         self.thrust_magnitude = 0.4
         self.thrust_direction = 0
 
@@ -39,9 +44,15 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self, screen_width, gravity_constant, levels, non_player_sprites):
+
+        self.a_x = self.thrust_direction * self.thrust_magnitude * self.sin_angle
+        self.a_y = self.thrust_direction * self.thrust_magnitude * self.cos_angle
+
         self.calculate_gravity(gravity_constant, levels)
-        self.v_x += self.thrust_direction * self.thrust_magnitude * self.sin_angle
-        self.v_y += self.thrust_direction * self.thrust_magnitude * self.cos_angle
+        self.calculate_air_resistance()
+
+        self.v_x += self.a_x
+        self.v_y += self.a_y
         
         self.rect.move_ip(-self.v_x,0)
         for sprite in non_player_sprites:
@@ -56,9 +67,19 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += 2
         is_on_platform = pygame.sprite.spritecollideany(self, levels)
         self.rect.y -= 2
+
         if is_on_platform == None:
             for sprite in levels:
-                self.v_y += sprite.mass_ratio*gravity_constant/((sprite.get_center() - self.rect.centery))
+                self.a_y += sprite.mass_ratio*gravity_constant/((sprite.get_center() - self.rect.centery))
+        
+    def calculate_air_resistance(self):
+
+        # Calculate air resistance coefficient
+        air_resistance_coef = 0.0002*np.exp(-(self.rect.centery - self.start_height))
+
+        # Air resistance always acts in opposite direction to velocity
+        self.air_y = -np.sign(self.v_y)*air_resistance_coef * self.v_y**2
+        self.a_y += self.air_y
 
     def accelerate(self, direction):
         if (self.thrust_direction >-1 and direction == 1) or (self.thrust_direction <1 and direction == -1):
