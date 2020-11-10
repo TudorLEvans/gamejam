@@ -88,7 +88,7 @@ def mainGame(screen, screen_width, screen_height):
             playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
 
             scoreSprite.update_score(screen_width, journey_length, journey_length + moon.rect.centery)
-            speedometerSprite.update_speed(screen_height, playerSprite.v_y)
+            speedometerSprite.update_speed(screen_height, playerSprite.v_y, playerSprite.a_y)
             timerSprite.update_time(screen_width, screen_height, time)
 
             for entity in all_sprites:
