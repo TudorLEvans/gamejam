@@ -14,14 +14,15 @@ from pygame.locals import (
 )
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, player_image):
         super(Player, self).__init__()
 
         self.width = 25
         self.height = 40
 
-        self.original_surf = pygame.Surface((self.width, self.height))
-        self.original_surf.fill((50, 255, 50))
+        self.original_surf = player_image
+        self.original_surf = pygame.transform.scale(player_image, (50,120))
+        # self.original_surf.fill((50, 255, 50))
 
         self.surf = self.original_surf
         self.rect = self.surf.get_rect(center = (screen_width//2, screen_height//2))

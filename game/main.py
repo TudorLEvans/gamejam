@@ -13,7 +13,7 @@ from pygame.locals import (
 from .sprites import platform, player, background, score_tracker, speedometer, timer
 from menu.pause import create_pause_menu
 
-def mainGame(screen, screen_width, screen_height, moon_image, earth_image):
+def mainGame(screen, screen_width, screen_height, moon_image, earth_image, player_image):
 
     gravity_constant =  100
     frame_rate = 60
@@ -30,7 +30,7 @@ def mainGame(screen, screen_width, screen_height, moon_image, earth_image):
     all_sprites.add(backgroundSprite)
     non_player_sprites.add(backgroundSprite)
 
-    playerSprite = player.Player(screen_width, screen_height)
+    playerSprite = player.Player(screen_width, screen_height, player_image)
     all_sprites.add(playerSprite)
 
     moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True, moon_image)

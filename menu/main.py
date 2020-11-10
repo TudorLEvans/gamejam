@@ -14,10 +14,10 @@ mytheme = themes.Theme(
     menubar_close_button = False
 )
 
-def main_menu(screen, screen_width, screen_height, moon_image, earth_image):
+def main_menu(screen, screen_width, screen_height, moon_image, earth_image, player_image):
 
     def start_game():
-        win = main.mainGame(screen, screen_width, screen_height, moon_image, earth_image)
+        win = main.mainGame(screen, screen_width, screen_height, moon_image, earth_image, player_image)
         if win != None:
             end_menu = end_game_menu(screen, screen_width, screen_height, start_game, win)
             end_menu.mainloop(screen)
