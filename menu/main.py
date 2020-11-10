@@ -2,6 +2,7 @@ import pygame
 import pygame_menu
 from game import main
 from pygame_menu import themes
+from .end_game import end_game_menu
 
 mytheme = themes.Theme(
     title_bar_style=pygame_menu.widgets.MENUBAR_STYLE_NONE,
@@ -16,7 +17,11 @@ mytheme = themes.Theme(
 def main_menu(screen, screen_width, screen_height):
 
     def start_game():
-        main.mainGame(screen, screen_width, screen_height)
+        win = main.mainGame(screen, screen_width, screen_height)
+        if win != None:
+            end_menu = end_game_menu(screen, screen_width, screen_height, start_game, win)
+            end_menu.mainloop(screen)
+        return
 
     menu = pygame_menu.Menu(
         screen_width, 

@@ -1,11 +1,11 @@
 import pygame,sys
 
 class Platform(pygame.sprite.Sprite):
-    def __init__(self, position_x, position_y, radius, mass_ratio, is_moon):
+    def __init__(self, position_x, position_y, radius, mass_ratio, is_moon, image):
         super(Platform, self).__init__()
         
-        self.surf = pygame.Surface((600, 600))
-        self.surf.fill((200, 50, 50))
+        self.surf = pygame.image.load("images/{}.png".format(image))
+        self.surf = pygame.transform.scale(self.surf, (600, 600))
         self.rect = self.surf.get_rect()
         self.rect.topleft = position_x, position_y
 

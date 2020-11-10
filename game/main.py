@@ -13,8 +13,6 @@ from pygame.locals import (
 from .sprites import platform, player, background, score_tracker, speedometer, timer
 from menu.pause import create_pause_menu
 
-
-
 def mainGame(screen, screen_width, screen_height):
 
     gravity_constant =  100
@@ -35,12 +33,12 @@ def mainGame(screen, screen_width, screen_height):
     playerSprite = player.Player(screen_width, screen_height)
     all_sprites.add(playerSprite)
 
-    moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True)
+    moon = platform.Platform(0,-journey_length + screen_height/2, -200, 1, True, "moon")
     gravity_bodies.add(moon)
     all_sprites.add(moon)
     non_player_sprites.add(moon)
 
-    earth = platform.Platform(0,320, 300, 1.3, False)
+    earth = platform.Platform(0,320, 300, 1.3, False, "earth")
     gravity_bodies.add(earth)
     all_sprites.add(earth)
     non_player_sprites.add(earth)
@@ -55,7 +53,12 @@ def mainGame(screen, screen_width, screen_height):
     all_sprites.add(scoreSprite)
 
     def main_game_loop():
+        global running
         running = True
+        global gamePaused
+        gamePaused = False
+        global win
+        win = None
 
         time = 0
         while running:
@@ -66,6 +69,7 @@ def mainGame(screen, screen_width, screen_height):
                     pygame.quit()
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
+                        gamePaused = True
                         running = False
                     if event.key == K_UP:
                         playerSprite.accelerate(1)
@@ -85,7 +89,10 @@ def mainGame(screen, screen_width, screen_height):
 
             screen.fill((0,0,0))
 
-            playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
+            win = playerSprite.update(screen_width, gravity_constant, gravity_bodies, non_player_sprites)
+
+            if win != None:
+                running = False
 
             scoreSprite.update_score(screen_width, journey_length, journey_length + moon.rect.centery)
             speedometerSprite.update_speed(screen_height, playerSprite.v_y, playerSprite.a_y)
@@ -101,7 +108,11 @@ def mainGame(screen, screen_width, screen_height):
     pause_menu.disable()
 
     main_game_loop()
-    pause_menu.enable()
-    pause_menu.mainloop(screen)
 
-    return
+    print(gamePaused)
+
+    if gamePaused:
+        pause_menu.enable()
+        pause_menu.mainloop(screen)
+
+    return win
