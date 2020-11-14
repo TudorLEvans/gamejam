@@ -5,6 +5,9 @@ size = screen_width, screen_height = 600, 600
 
 pygame.init()
 
+pygame.mixer.music.load('sounds/GameJamTheme1.wav')
+pygame.mixer.music.play(-1)
+
 screen = pygame.display.set_mode(size)
 
 moon_image, earth_image, player_image = pygame.image.load("images/moon.png"), pygame.image.load("images/earth.png"), pygame.image.load("images/rocket.png")
