@@ -13,6 +13,10 @@ from pygame.locals import (
     QUIT,
 )
 
+pygame.mixer.init()
+rocketSound = pygame.mixer.Sound('sounds/RocketSound1.wav')
+rocketSoundChannel = pygame.mixer.Channel(1)
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen_width, screen_height, player_image):
         super(Player, self).__init__()
@@ -45,6 +49,11 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self, screen_width, gravity_constant, levels, non_player_sprites):
+
+        if self.thrust_direction != 0 and rocketSoundChannel.get_busy() == False:
+            rocketSoundChannel.play(rocketSound, -1)
+        elif self.thrust_direction == 0 and rocketSoundChannel.get_busy():
+            rocketSoundChannel.stop()
 
         self.a_x = self.thrust_direction * self.thrust_magnitude * self.sin_angle
         self.a_y = self.thrust_direction * self.thrust_magnitude * self.cos_angle
