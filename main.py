@@ -5,8 +5,8 @@ size = screen_width, screen_height = 600, 600
 
 pygame.init()
 
-pygame.mixer.music.load('sounds/GameJamTheme1.wav')
-pygame.mixer.music.play(-1)
+# pygame.mixer.music.load('sounds/GameJamTheme1.wav')
+# pygame.mixer.music.play(-1)
 
 screen = pygame.display.set_mode(size)
 

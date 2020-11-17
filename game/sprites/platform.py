@@ -1,4 +1,5 @@
 import pygame,sys
+import pymunk
 
 class Platform(pygame.sprite.Sprite):
     def __init__(self, position_x, position_y, radius, mass_ratio, is_moon, image):
@@ -6,8 +7,11 @@ class Platform(pygame.sprite.Sprite):
         
         self.surf = image
         self.surf = pygame.transform.scale(self.surf, (600, 600))
-        self.rect = self.surf.get_rect()
-        self.rect.topleft = position_x, position_y
+
+
+        self.body = pymunk.Body(body_type=pymunk.Body.STATIC)
+        self.body.position = position_x, position_y
+        self.shape = pymunk.Segment(self.body, (0, 0), (600, 0), radius)
 
         self.is_moon = is_moon
         self.radius = radius
@@ -15,3 +19,7 @@ class Platform(pygame.sprite.Sprite):
 
     def get_center(self):
         return self.radius + self.rect.centery - 500/2
+
+    @property
+    def topleft(self):
+        return self.body.position
